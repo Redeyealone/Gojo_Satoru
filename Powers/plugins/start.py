@@ -26,18 +26,39 @@ from Powers.vars import Config
 )
 async def donate(_, m: Message):
     cpt = """
-Hey Thanks for your thought of donating me!
-When you donate, all the fund goes towards my development which makes on fast and responsive.
-Your donation might also me get me a new feature or two, which I wasn't able to get due to server limitations.
+PM_START_TEXT = """
+Hey hi {}, I'm {}!
+I am an Anime themed group management bot.
+Built by weebs for weebs, I specialize in managing anime eccentric communities!
+"""
 
-All the fund would be put into my services such as database, storage and hosting!
+HELP_STRINGS = """
+Hey there! My name is *{}*.
+I'm a Hero For Fun and help admins manage their groups with One Punch! Have a look at the following for an idea of some of \
+the things I can help you with.
 
-You can donate by contacting my owner: [Captain Ezio](http://t.me/iamgojoof6eyes)
-     """
+*Main* commands available:
+ • /help: PM's you this message.
+ • /help <module name>: PM's you info about that module.
+ • /donate: information on how to donate!
+ • /settings:
+   • in PM: will send you your settings for all supported modules.
+   • in a group: will redirect you to pm, with all that chat's settings.
 
-    LOGGER.info(f"{m.from_user.id} fetched donation text in {m.chat.id}")
-    await m.reply_photo(photo=str(choice(StartPic)), caption=cpt)
-    return
+
+{}
+And the following:
+""".format(
+    dispatcher.bot.first_name,
+    "" if not ALLOW_EXCL else "\nAll commands can either be used with / or !.\n",
+)
+
+SAITAMA_IMG = "https://telegra.ph/file/46e6d9dfcb3eb9eae95d9.jpg"
+
+DONATE_STRING = """Heya, glad to hear you want to donate!
+ You can support the project via [Paypal](ko-fi.com/sawada) or by contacting @Sawada \
+ Supporting isnt always financial! \
+ Those who cannot provide monetary support are welcome to help us develop the bot at @OnePunchDev."""
 
 
 @Gojo.on_callback_query(filters.regex("^close_admin$"))
@@ -114,11 +135,10 @@ Hit /help to find out more about how to use me in my full potential!
 Join my [News Channel](https://t.me/gojo_bots_network) to get information on all the latest updates."""
 
             await m.reply_photo(
-                photo=str(choice(StartPic)),
-                caption=cpt,
-                reply_markup=(await gen_start_kb(m)),
-                quote=True,
-            )
+                SAITAMA_IMG,
+                PM_START_TEXT.format(
+                    escape_markdown(first_name), escape_markdown(context.bot.first_name),
+                ),
         except UserIsBlocked:
             LOGGER.warning(f"Bot blocked by {m.from_user.id}")
     else:
